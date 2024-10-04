@@ -1,31 +1,27 @@
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const {MongoClient, ServerApiVersion} = require('mongodb');
 
-const dbUser = process.env.MONGODB_USER || '';
-const dbPassword = process.env.MONGODB_PASSWORD || '';
-const uri = `mongodb+srv://${dbUser}:${dbPassword}@duc.hbyzp.mongodb.net/?retryWrites=true&w=majority&appName=DUC`;
+const connect = (dbSettings, mediator) => {
+    if (!mediator) throw new Error('Missing Mediator Database');
+    if (!dbSettings) throw new Error('Missing DB Config');
+    if (!dbSettings.dbUser || !dbSettings.dbName || !dbSettings.dbPassword) throw new Error('Missing DB User or DB Name or DB Password');
+    const uri = `mongodb+srv://${dbSettings.dbUser}:${dbSettings.dbPassword}@duc.hbyzp.mongodb.net/?retryWrites=true&w=majority&appName=DUC`;
 
-const client = new MongoClient(uri, {
-    serverApi: {
-        version: ServerApiVersion.v1,
-        strict: true,
-        deprecationErrors: true,
-    }
-});
+    MongoClient.connect(uri, {
+        serverApi: {
+            version: ServerApiVersion.v1,
+            strict: true,
+            deprecationErrors: true,
+        }
+    })
+        .then((client) => {
+            const db = client.db(dbSettings.dbName);
+            mediator.emit('DB connected', db);
+        })
+        .catch((err) => {
+            mediator.emit('DB connection error', err);
+        });
+};
 
-async function runMongoDb() {
-    try {
-        await client.connect();
-        await client.db("admin").command({ ping: 1 });
-        console.log("Pinged your deployment. You successfully connected to MongoDB!");
-    }
-    catch (err) {
-       throw err
-    }
-}
-process.on('SIGINT', async () => {
-    await client.close();
-    console.log('MongoDB connection closed');
-    process.exit(0);
-})
+module.exports = { connect };
 
-module.exports = {runMongoDb};
+

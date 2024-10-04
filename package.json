@@ -3,18 +3,21 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "start": "node --env-file=.env  src/server.js"
+    "start": "node --env-file=.env  src/index.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "awilix": "^11.0.4",
     "body-parser": "^1.20.3",
     "express": "^4.21.0",
     "helmet": "^8.0.0",
     "joi": "^17.13.3",
+    "jsonwebtoken": "^9.0.2",
     "mongodb": "^6.9.0",
-    "morgan": "^1.10.0"
+    "morgan": "^1.10.0",
+    "request-promise": "^4.2.6"
   }
 }

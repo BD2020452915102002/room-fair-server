@@ -1,8 +1,5 @@
-const express = require('express');
-const {login, logout} = require("../controller/userController");
-const router = express.Router();
-
-router.get('/login', login);
-router.post('/logout', logout);
-
-module.exports = router;
+module.exports = (app, container) => {
+    const {userController} = require("../controller")(container);
+    const { basePath , version } = container.resolve('serverSettings')
+    app.get(`${basePath}/${version}/user/login`, userController.login )
+}

@@ -1,5 +1,3 @@
-const userApi = require('./userApi');
-const apis = (app)=>{
-    app.use('/user', userApi)
+module.exports = (app, container) => {
+    require('./userApi')(app, container)
 }
-module.exports = {apis};

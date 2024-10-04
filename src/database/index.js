@@ -1,10 +1,2 @@
-const {runMongoDb} = require("./mongodb");
-
-const connectDb = async ()=>{
-    try {
-        await runMongoDb()
-    } catch(err){
-        throw err;
-    }
-}
-module.exports = {connectDb};
+const  connectDb  = require('./mongodb').connect
+module.exports = { connectDb }

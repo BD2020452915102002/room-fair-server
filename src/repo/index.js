@@ -1,9 +1,10 @@
-
-const repo = (mongoClient) => {
-    return require('./user.repo')(mongoClient)
+module.exports =(db) =>{
+    const userRepo = (mongoClient) => {
+        return require('./user.repo')(mongoClient)
+    }
+    const connectUserRepo = () => {
+        if (!db) throw new Error('Connect DB failed')
+        return userRepo(db)
+    }
+    return { connectUserRepo }
 }
-const connectRepo = (dbPool) => {
-    if (!dbPool) throw new Error('Connect DB failed')
-    return repo(dbPool)
-}
-module.exports = {connectRepo}

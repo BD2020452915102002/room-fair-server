@@ -1,6 +1,7 @@
+const {userValidator} = require("../models");
 module.exports = (container) => {
-    // const {schemaValidator} = container.resolve('models')
-    // const userRepo = container.resolve('repo')
+    const userValidator = container.resolve('models')
+    const userRepo = container.resolve('repo')
     // const {getUserToken} = container.resolve('serverHelper')
     // const {passwordTool} = container.resolve('util')
     const login = async (req, res) => {

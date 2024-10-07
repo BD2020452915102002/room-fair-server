@@ -1,13 +1,11 @@
-const joi = require('joi')
-const user = require('./user.model')(joi)
-const userSchemas = joi.object(user)
+const {userValidate} = require("./user.model");
 
-const schemaValidator = (userData)=>{
+const userValidator = (userData)=>{
     return new Promise((resolve,reject)=>{
         if(!userData){
             reject(new Error('User data does not exist'))
         }
-        const {error,value} = userSchemas.validate(userData)
+        const {error,value} = userValidate(userData)
         if(error) {
             reject(new Error(`invalid user schema: ${error}`))
         }
@@ -15,4 +13,4 @@ const schemaValidator = (userData)=>{
     })
 }
 
-module.exports = {schemaValidator}
+module.exports = {userValidator}

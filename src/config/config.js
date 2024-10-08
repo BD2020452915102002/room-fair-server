@@ -22,7 +22,7 @@ const httpCode = {
 const serverHelper = function () {
     const jwt = require('jsonwebtoken')
     const crypto = require('crypto')
-    const secretKey = process.env.SECRET_KEY || '112customer'
+    const secretKey = process.env.SECRET_KEY || ''
 
     function decodeToken(token) {
         return jwt.decode(token)

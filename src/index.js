@@ -29,7 +29,6 @@ mediator.on('DB connected', (db) => {
 mediator.once('di.ready', container => {
     container.registerValue('mediator', mediator)
     container.registerValue('serverSettings', serverSettings)
-    container.registerValue('repo', repo())
     container.registerValue('model', userValidator)
     start(container).then(app => {
         console.log('Server started at port ', app.address().port)

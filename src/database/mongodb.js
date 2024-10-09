@@ -15,7 +15,7 @@ const connect = (dbSettings, mediator) => {
     })
         .then((client) => {
             const db = client.db(dbSettings.dbName);
-            mediator.emit('DB connected', db);
+            mediator.emit('DB connected', {db, client});
         })
         .catch((err) => {
             mediator.emit('DB connection error', err);

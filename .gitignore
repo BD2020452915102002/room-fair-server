@@ -132,3 +132,5 @@ dist
 /.idea/modules.xml
 /.idea/room-fair-server.iml
 /.idea/vcs.xml
+/.idea/git_toolbox_blame.xml
+/.idea/git_toolbox_prj.xml

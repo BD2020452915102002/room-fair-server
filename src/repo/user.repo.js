@@ -1,23 +1,10 @@
 module.exports = function (mongoClient) {
-    const addUser = async (user, encryptPassword) => {
-        const {name, email, password, phone, createTime} = user;
+    const addUser = async (user) => {
         try {
             const userExists = await checkUserExists(user);
             if (!userExists) {
-                const hashedPassword = await encryptPassword(password)
-                const result = await mongoClient.collection('users').insertOne({
-                    name,
-                    email,
-                    phone,
-                    password: hashedPassword,
-                    createTime,
-                });
+                const result = await mongoClient.collection('users').insertOne(user);
                 console.log(`New user created with the following id: ${result.insertedId}`);
-                return {
-                    name,
-                    email,
-                    phone,
-                };
             } else {
                 throw new Error("User already exists!")
             }
@@ -26,7 +13,6 @@ module.exports = function (mongoClient) {
             throw err
         }
     };
-
     const checkUserExists = async (user) => {
         try {
             const result = await mongoClient.collection('users').findOne({phone: user.phone});
@@ -36,24 +22,13 @@ module.exports = function (mongoClient) {
             return false;
         }
     };
-
-    const loginUser = async (user, passwordTool) => {
+    const getUserByPhone = async (phone) => {
         try {
-            const userRecord = await mongoClient.collection('users').findOne({username: user.username});
-            if (userRecord) {
-                const passwordMatches = await passwordTool.compare(user.password, userRecord.password)
-                if (passwordMatches) {
-                    return userRecord;
-                } else {
-                    throw new Error("Password doesn't match")
-                }
-            } else {
-                throw new Error("User does not exist")
-            }
+            return await mongoClient.collection('users').findOne({phone: phone});
         } catch (err) {
             throw err
         }
     };
 
-    return {addUser, checkUserExists, loginUser};
+    return {addUser, checkUserExists, getUserByPhone};
 };

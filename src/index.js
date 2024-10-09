@@ -1,6 +1,6 @@
 const {initDI} = require('./di')
 const {start} = require("./sever");
-const {serverSettings, dbSettings} = require("./config");
+const {serverSettings, dbSettings,serverHelper,httpCode} = require("./config");
 const repo = require("./repo");
 const {connectDb} = require("./database");
 const {userValidator} = require("./models");
@@ -43,7 +43,9 @@ mediator.on('DB connected', ({ db, client }) => {
 mediator.once('di.ready', container => {
     container.registerValue('mediator', mediator)
     container.registerValue('serverSettings', serverSettings)
+    container.registerValue('serverHelper', serverHelper)
     container.registerValue('model', userValidator)
+    container.registerValue('httpCode', httpCode)
     start(container).then(app => {
         console.log('Server started at port ', app.address().port)
     }).catch(err => {

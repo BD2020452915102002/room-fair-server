@@ -1,16 +1,12 @@
-const {userValidate} = require("./user.model");
+const {userSchemas} = require("./user.model");
 
-const userValidator = (userData)=>{
-    return new Promise((resolve,reject)=>{
-        if(!userData){
-            reject(new Error('User data does not exist'))
-        }
-        const {error,value} = userValidate(userData)
-        if(error) {
-            reject(new Error(`invalid user schema: ${error}`))
-        }
-        resolve(value)
-    })
-}
+const userValidator = (userData) => {
+    return new Promise((resolve, reject) => {
+        const { error, value } = userSchemas.validate(userData);
+        if (error) reject(error);
+        else resolve(value);
+    });
+};
+
 
 module.exports = {userValidator}

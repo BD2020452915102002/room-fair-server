@@ -6,5 +6,5 @@ module.exports =(db) =>{
         if (!db) throw new Error('Connect DB failed')
         return userRepo(db)
     }
-    return { connectUserRepo }
+    return { connectUserRepo: connectUserRepo() }
 }

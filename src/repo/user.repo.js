@@ -1,18 +1,23 @@
 module.exports = function (mongoClient) {
-    const addUser = async (user,passwordTool) => {
-        const { username, name, isAdmin, createTime, password } = user;
+    const addUser = async (user, encryptPassword) => {
+        const {name, email, password, phone, createTime} = user;
         try {
             const userExists = await checkUserExists(user);
             if (!userExists) {
-                const hashedPassword = await passwordTool.hash(password)
+                const hashedPassword = await encryptPassword(password)
                 const result = await mongoClient.collection('users').insertOne({
-                    username,
                     name,
+                    email,
+                    phone,
                     password: hashedPassword,
-                    isAdmin,
                     createTime,
                 });
                 console.log(`New user created with the following id: ${result.insertedId}`);
+                return {
+                    name,
+                    email,
+                    phone,
+                };
             } else {
                 throw new Error("User already exists!")
             }
@@ -24,7 +29,7 @@ module.exports = function (mongoClient) {
 
     const checkUserExists = async (user) => {
         try {
-            const result = await mongoClient.collection('users').findOne({ username: user.username });
+            const result = await mongoClient.collection('users').findOne({phone: user.phone});
             return !!result;
         } catch (err) {
             console.error('DB connection error:', err)
@@ -32,11 +37,11 @@ module.exports = function (mongoClient) {
         }
     };
 
-    const loginUser = async (user,passwordTool) => {
+    const loginUser = async (user, passwordTool) => {
         try {
-            const userRecord = await mongoClient.collection('users').findOne({ username: user.username });
+            const userRecord = await mongoClient.collection('users').findOne({username: user.username});
             if (userRecord) {
-                const passwordMatches =await passwordTool.compare(user.password,userRecord.password)
+                const passwordMatches = await passwordTool.compare(user.password, userRecord.password)
                 if (passwordMatches) {
                     return userRecord;
                 } else {
@@ -50,5 +55,5 @@ module.exports = function (mongoClient) {
         }
     };
 
-    return { addUser, checkUserExists, loginUser };
+    return {addUser, checkUserExists, loginUser};
 };
